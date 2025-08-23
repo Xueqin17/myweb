@@ -1,0 +1,39 @@
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 12px 20px 24px;
+}
+@media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--bg);
+}
+
+.title { font-size: 18px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.label { display:block; margin: 10px 0 6px; font-weight: 600; }
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+}
+.note { color:#6b7280; font-size: 14px; margin-top: 6px; }
+
+.pre {
+   background: #0b1022;
+  color: #e6edf3;
+  border-radius: 8px;
+  padding: 14px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  min-height: 300px;
+}

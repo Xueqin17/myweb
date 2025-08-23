@@ -1,66 +1,74 @@
 
-.header {
-  background: #4a4d52;
-  color: #fff;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-bottom: 2px solid #2e3136;
+.nav {
+  background: var(--nav-bg, #4a4d52);
+  color: var(--nav-fg, #e8eaed);
+  border-bottom: 1px solid #2e3136;
+}
+
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;         
+  justify-content: space-between; 
+  min-height: 64px;           
+  gap: 16px;
 }
 
 
 .brand {
-  color: #cfe3ff;
-  font-weight: 600;
+  color: inherit;
   text-decoration: none;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: .3px;
 }
 
 
 .menu {
+  display: flex;
+  align-items: center;
+  gap: 80px;                  
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  gap: 18px;
-  align-items: center;
 }
-.menu a {
-  color: #e8eaed;
+
+/* Link style */
+.link {
+  color: inherit;
   text-decoration: none;
-  padding: 6px 4px;
-  border-bottom: 2px solid transparent;
+  font-size: 18px;
 }
-.activeLink { border-color: #e8eaed; }
-.menu a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.link:hover {
+  text-decoration: underline;
+}
 
 
 .hamburger {
- 
-  width: 40px; height: 28px;
-  border: none; background: transparent;
-  position: relative; cursor: pointer;
-  margin-left: 8px;
+  width: 42px;
+  height: 30px;
+  position: relative;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 .hamburger span {
-  position: absolute; left: 6px; right: 6px; height: 3px; background: #2b2f34;
-  transition: transform .28s ease, opacity .2s ease, background .2s ease;
+  position: absolute;
+  left: 6px; right: 6px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
 }
-.hamburger span:nth-child(1){ top: 6px; }
-.hamburger span:nth-child(2){ top: 12px; }
-.hamburger span:nth-child(3){ top: 18px; }
+.hamburger span:nth-child(1){ top: 7px; }
+.hamburger span:nth-child(2){ top: 14px; }
+.hamburger span:nth-child(3){ top: 21px; }
 
-.hamburger.active span:nth-child(1){ transform: translateY(6px) rotate(45deg); background:#e8eaed; }
-.hamburger.active span:nth-child(2){ opacity: 0; }
-.hamburger.active span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); background:#e8eaed; }
-
-
+/* When the screen is small, the menu is hidden and only the hamburger icon is displayed*/
 @media (max-width: 900px){
-  .menu {
-    position: absolute; right: 12px; top: 54px;
-    background: #4a4d52; border: 1px solid #2e3136; border-radius: 10px;
-    padding: 12px; display: none; flex-direction: column; gap: 12px; min-width: 200px;
-  }
-  .menu.open { display: flex; }
+  .menu { display: none; }
 }

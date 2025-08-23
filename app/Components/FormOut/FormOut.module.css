@@ -35,5 +35,42 @@
   overflow: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   white-space: pre-wrap;
-  min-height: 300px;
+  word-break: break-word;
+  /* min-height: 300px; */
+  max-width: 100%;
+}
+
+
+
+/* ---- Execute area ---- */
+.actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #444;
+  color: #fff;
+  cursor: pointer;
+}
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  background-color: #aaa;
+}
+
+.log {
+  margin-top: 12px;
+  padding: 12px;
+  min-height: 100px;
+  border: 1px dashed #9ca3af;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }

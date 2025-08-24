@@ -46,7 +46,7 @@ export default function ExecuteButtons({
         // disabled={disabled}
         onClick={handleExecute}
       >
-        Execute (Git CLI)
+        Execute 
       </button>
     </div>
   );

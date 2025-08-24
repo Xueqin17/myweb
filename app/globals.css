@@ -19,6 +19,7 @@
   }
 } */
 
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -29,6 +30,8 @@ body {
   --bg: #1a1a1a;
   --fg: #ffffff;
 }
+
+
 body {
   background: var(--bg);
   color: var(--fg);

@@ -8,11 +8,6 @@ import Hamburger from './Hamburger';
 import { useState } from 'react';
 import Link from 'next/link';
 
-/**
- * - MenuTabs：（themes / Docker / Prisma / Tests / About）
- * - Actions：operation area on the right
- */
-
 const TABS: Array<[string, string]> = [
   ['/', 'Home'],                 
   ['/docker', 'Docker'],
@@ -39,7 +34,6 @@ export default function HeaderNav() {
           ))}
         </ul>
 
-        
         <button className={styles.hamburger} aria-label="Menu">
           <span /><span /><span />
         </button>

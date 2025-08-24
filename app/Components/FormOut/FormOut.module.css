@@ -40,7 +40,11 @@
   max-width: 100%;
 }
 
-
+:global([data-theme="dark"]) .pre {
+  background: #0b1220;            
+  color: #f3f4f6;                 
+  border-color: #1f2937;
+}
 
 /* ---- Execute area ---- */
 .actions {

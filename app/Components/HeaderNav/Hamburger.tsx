@@ -1,25 +1,22 @@
 'use client';
 
-import React from 'react';
 import styles from './HeaderNav.module.css';
 
-/**
- The aria- attribute enhances accessibility 
- for screen readers/keyboard navigation.
- */
-export default function Hamburger({ open, setOpen }:{
+type Props = {
   open: boolean;
   setOpen: (v: boolean) => void;
-}) {
+};
+
+export default function Hamburger({ open, setOpen }: Props) {
   return (
     <button
-      className={`${styles.hamburger} ${open ? styles.active : ''}`}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      className={`${styles.burger} ${open ? styles.open : ''}`}
       onClick={() => setOpen(!open)}
-      aria-label="Menu"
-      aria-expanded={open}
-      aria-controls="main-menu"
     >
-      <span /><span /><span />
+      <span />
+      <span />
+      <span />
     </button>
   );
 }

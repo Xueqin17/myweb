@@ -2,7 +2,7 @@
   position: sticky;  /* Keep staying close to the top when scrolling downward */
   top: 0;
   z-index: 1000;
-  background: #111;
+  background: #606060;
   color: #fff;
   padding: 6px 12px;
   font-size: 14px;

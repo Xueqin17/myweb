@@ -66,7 +66,7 @@ export default function FormOut() {
           <input
             id="t"
             className={styles.input}
-            placeholder="fine‑grained token "
+            placeholder="token "
             value={form.token}
             onChange={set('token')}
           />

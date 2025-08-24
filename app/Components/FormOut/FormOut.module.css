@@ -28,8 +28,8 @@
 .note { color:#6b7280; font-size: 14px; margin-top: 6px; }
 
 .pre {
-   background: #0b1022;
-  color: #e6edf3;
+   background: #f3f3f4;
+  color: #080808;
   border-radius: 8px;
   padding: 14px;
   overflow: auto;
@@ -53,9 +53,9 @@
 .btn {
   padding: 10px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: #444;
-  color: #fff;
+  border-radius: 28px;
+  background: #1d1d1d;
+  color: #fefbfb;
   cursor: pointer;
 }
 .btn:disabled {

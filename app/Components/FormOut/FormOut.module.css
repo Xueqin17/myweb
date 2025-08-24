@@ -39,6 +39,7 @@
   max-width: 100%;
 }
 
+/* Adjust dark mode */
 :global([data-theme="dark"]) .pre {
   background: #0b1220;            
   color: #f3f4f6;                 

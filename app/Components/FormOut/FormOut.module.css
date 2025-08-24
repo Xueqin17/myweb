@@ -36,10 +36,10 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   white-space: pre-wrap;
   word-break: break-word;
-  /* min-height: 300px; */
   max-width: 100%;
 }
 
+/* Adjust dark mode */
 :global([data-theme="dark"]) .pre {
   background: #0b1220;            
   color: #f3f4f6;                 
@@ -57,7 +57,7 @@
 .btn {
   padding: 10px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 28px;
+  border-radius: 25px;
   background: #1d1d1d;
   color: #fefbfb;
   cursor: pointer;

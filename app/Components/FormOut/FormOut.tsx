@@ -48,14 +48,14 @@ export default function FormOut() {
     <div className={styles.wrap}>
       {/* Form */}
       <section className={styles.card}>
-        <div className={styles.title}>Input</div>
+        <div className={styles.title}>Inputs</div>
 
         <label className={styles.row}>
           <span className={styles.label}>Username</span>
           <input
             id="u"
             className={styles.input}
-            placeholder="github username"
+            placeholder="Github username"
             value={form.username}
             onChange={set('username')}
           />
@@ -66,7 +66,7 @@ export default function FormOut() {
           <input
             id="t"
             className={styles.input}
-            placeholder="token "
+            placeholder="Token "
             value={form.token}
             onChange={set('token')}
           />
@@ -77,7 +77,7 @@ export default function FormOut() {
           <input
             id="o"
             className={styles.input}
-            placeholder="repo owner"
+            placeholder="Repo owner"
             value={form.owner}
             onChange={set('owner')}
           />
@@ -88,7 +88,7 @@ export default function FormOut() {
           <input
             id="r"
             className={styles.input}
-            placeholder="repository name"
+            placeholder="Repository name"
             value={form.repo}
             onChange={set('repo')}
           />
@@ -97,7 +97,7 @@ export default function FormOut() {
 
       {/* Execute area */}
       <section className={styles.card}>
-        <div className={styles.title}>Execute</div>
+        <div className={styles.title}>Execute Commands</div>
 
         {/* Command preview */}
         <pre className={styles.pre}>{preview}</pre>

@@ -88,7 +88,7 @@ export default function FormOut() {
           <input
             id="r"
             className={styles.input}
-            placeholder="repository name"
+            placeholder="Repository name"
             value={form.repo}
             onChange={set('repo')}
           />

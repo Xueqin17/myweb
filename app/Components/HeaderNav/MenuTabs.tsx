@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 // Menu configuration
 const TABS: Array<[string, string]> = [
-  ['/', 'themes'],          // Homepage
+  ['/', 'Home'],          // Homepage
   ['/docker', 'Docker'],
   ['/prisma', 'Prisma/Sequelize'],
   ['/tests', 'Tests'],

@@ -65,6 +65,7 @@ export default function FormOut() {
           <span className={styles.label}>Token</span>
           <input
             id="t"
+            type="password"
             className={styles.input}
             placeholder="Token "
             value={form.token}

@@ -3,19 +3,13 @@ import { execSync } from 'child_process';
 
 export async function POST() {
   try {
-    const commands = [
-      'docker build -t my-next-app .',
-      'docker run --rm my-next-app',
-    ];
+    const output = execSync('docker build -t my-next-app .', {
+      cwd: process.cwd(),
+      encoding: 'utf-8',
+    });
 
-    let output: string[] = [];
-    for (const cmd of commands) {
-      const out = execSync(cmd, { encoding: 'utf8', stdio: 'pipe', shell: 'cmd.exe' });
-      output.push(`$ ${cmd}\n${out}`);
-    }
-
-    return NextResponse.json({ ok: true, output });
+    return NextResponse.json({ success: true, output });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, output: err.message }, { status: 500 });
   }
 }

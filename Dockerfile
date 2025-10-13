@@ -1,6 +1,6 @@
-<pre style={{ background: '#eee', padding: '1rem' }}>
+
 # Use an official Node.js image
-FROM node:18
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
@@ -13,4 +13,3 @@ RUN npm install
 
 # Start app
 CMD ["npm", "run", "dev"]
-</pre>

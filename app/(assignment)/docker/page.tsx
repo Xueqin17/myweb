@@ -1,55 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from "react";
 
 export default function DockerPage() {
-  const [log, setLog] = useState<string>(''); 
+  const [output, setOutput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
-  const handleRunDocker = async () => {
+  
+  const runDocker = async () => {
+    setLoading(true);
+    setDone(false);
+    setOutput("Running Docker build...");
     try {
-      const res = await fetch('/api/docker', {
-        method: 'POST',
+      const res = await fetch("/api/docker", {
+        method: "POST",
       });
       const data = await res.json();
-      setLog(data.output); 
+      setOutput(data.output || "No output received.");
     } catch (err) {
-      setLog('Error running Docker.');
+      setOutput("Error running Docker command.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Docker Execution</h2>
-      <p>This demonstrates Docker build and run output.</p>
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-2">Docker Execution</h2>
+      <p className="mb-4">This demonstrates Docker build and run output.</p>
 
       <button
-        onClick={handleRunDocker}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          fontSize: '16px',
-          marginTop: '10px',
-        }}
+        onClick={runDocker}
+        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        disabled={loading}
       >
-        Run Docker
+        {loading ? "Running..." : "Run Docker"}
       </button>
 
-      {/* Output log */}
-      <pre
-        style={{
-          backgroundColor: '#eee',
-          padding: '1rem',
-          marginTop: '1rem',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        {log}
-      </pre>
+       {done && <p className="mt-2 text-green-600"> Build completed successfully.</p>}
+
+       {output && (
+        <>
+          <h2 className="mt-6 text-xl font-semibold mb-2">Docker Build Output:</h2>
+
+          <pre className="mt-6 bg-gray-100 p-4 rounded whitespace-pre-wrap text-sm text-black overflow-auto">
+            {output}
+          </pre>
+        </>
+      )}
     </div>
   );
 }

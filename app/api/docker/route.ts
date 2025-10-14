@@ -1,15 +1,22 @@
-import { NextResponse } from 'next/server';
-import { execSync } from 'child_process';
+import { NextResponse } from "next/server";
+import { exec } from "child_process";
+import util from "util";
+
+
+const execPromise = util.promisify(exec);
 
 export async function POST() {
   try {
-    const output = execSync('docker build -t my-next-app .', {
-      cwd: process.cwd(),
-      encoding: 'utf-8',
-    });
+    const { stdout, stderr } = await execPromise("docker build -t my-next-app .");
 
-    return NextResponse.json({ success: true, output });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, output: err.message }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      output: stdout || stderr || "No output received",
+    });
+  } catch (error: any) {
+    return NextResponse.json({
+      success: false,
+      output: error.message || "Docker build failed",
+    });
   }
 }

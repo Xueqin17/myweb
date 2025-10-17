@@ -1,68 +1,65 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import React, { useState } from 'react';
 
 export default function DockerPage() {
-  const [tool, setTool] = useState<"sequelize" | "prisma">("sequelize");
-  const [log, setLog] = useState<string>("");
+  const [imageName, setImageName] = useState('myweb-app');
+  const [logs, setLogs] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  
   const handleExecute = async () => {
-    setLog(" Running docker build and execution...");
+    if (!imageName) {
+      alert('Please enter a Docker image name!');
+      return;
+    }
+
+    setLoading(true);
+    setLogs(`Starting Docker build for image: ${imageName}\n`);
 
     try {
-      const res = await fetch("/api/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool }),
+      const res = await fetch('/api/docker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageName }),
       });
 
       const data = await res.json();
-      setLog(data.message || " Execution complete!");
-    } catch (err) {
-      console.error(err);
-      setLog(" Failed to execute command.");
+
+      if (data.success) {
+        setLogs((prev) => prev + `\n ${data.message}\n\n${data.logs}`);
+      } else {
+        setLogs((prev) => prev + `\n ${data.message}\n${data.error}`);
+      }
+    } catch (error) {
+      setLogs('Failed to execute Docker automation.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Docker Automation</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Docker Automation </h1>
 
-      {/* Toggle */}
-      <div className="flex space-x-6 mb-6">
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="tool"
-            value="sequelize"
-            checked={tool === "sequelize"}
-            onChange={() => setTool("sequelize")}
-          />
-          <span>Sequelize</span>
-        </label>
-
-        <label className="flex items-center space-x-2">
-          <input
-            type="radio"
-            name="tool"
-            value="prisma"
-            checked={tool === "prisma"}
-            onChange={() => setTool("prisma")}
-          />
-          <span>Prisma</span>
-        </label>
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          value={imageName}
+          onChange={(e) => setImageName(e.target.value)}
+          className="border px-3 py-2 rounded w-64"
+          placeholder="Enter Docker image name..."
+        />
+        <button
+          onClick={handleExecute}
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        >
+          {loading ? 'Building...' : 'Execute'}
+        </button>
       </div>
 
-      <button
-        onClick={handleExecute}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Execute
-      </button>
-
-      <pre className="bg-gray-100 p-4 mt-6 rounded text-sm text-gray-700 whitespace-pre-wrap">
-        {log}
+      <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto whitespace-pre-wrap h-[500px]">
+        {logs || 'No output yet. Click Execute to start.'}
       </pre>
     </div>
   );

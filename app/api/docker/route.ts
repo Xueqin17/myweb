@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const now = new Date().toISOString();
 
     // Initialzie log
-    let logOutput = ` Docker Automation Started at ${now}\n`;
+    let logOutput = `Docker Automation Started at ${now}\n`;
     logOutput += `Image name: ${imageName}\n\n`;
 
     // Generate Dockerfile content
@@ -49,7 +49,7 @@ services:
     logOutput += "Dockerfile & docker-compose.yml created successfully.\n\n";
 
     // Build Docker image
-    logOutput += " Starting Docker build...\n";
+    logOutput += "Starting Docker build...\n";
 
     const dockerCommand = `docker build -t ${imageName} .`;
     const dockerOutput = await new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ services:
       });
     });
 
-    logOutput += " Docker build complete.\n\n";
+    logOutput += "Docker build complete.\n\n";
 
     // Auto commit to GitHub
     logOutput += "Committing Docker configs to GitHub...\n";
@@ -77,7 +77,7 @@ services:
       });
     });
 
-    logOutput += " GitHub push complete.\n\n";
+    logOutput += "GitHub push complete.\n\n";
 
     // log output
     const fullOutput = `

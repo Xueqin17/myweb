@@ -5,7 +5,7 @@ services:
     image: myweb
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3000"
     container_name: myweb-container
     restart: always
     command: npm start

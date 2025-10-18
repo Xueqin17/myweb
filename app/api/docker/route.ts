@@ -52,9 +52,10 @@ services:
     });
 
     // Automating commit to GitHub
+    const now = new Date().toISOString();
     const gitCommands = `
       git add Dockerfile docker-compose.yml &&
-      git commit -m "Auto generated Docker config for ${imageName}" &&
+      git commit -m "Auto generated Docker config for ${imageName} at ${now}" &&
       git push origin main
     `;
     const gitOutput = await new Promise((resolve, reject) => {
@@ -71,10 +72,11 @@ services:
       logs: `${dockerOutput}\n\n--- GIT LOG ---\n${gitOutput}`,
     });
   } catch (error: any) {
+    console.error("Docker automation failed:", error);
     return NextResponse.json({
       success: false,
       message: 'Error during Docker automation',
-      error: error.message,
+      error: error?.stdeer || error?.message || String(error),
     });
   }
 }

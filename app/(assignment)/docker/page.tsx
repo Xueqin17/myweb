@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 export default function DockerPage() {
-  const [imageName, setImageName] = useState('myweb-app');
+  const [imageName, setImageName] = useState('');
   const [logs, setLogs] = useState('');
   const [loading, setLoading] = useState(false);
 

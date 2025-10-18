@@ -1,10 +1,12 @@
+
 version: '3'
 services:
-  myweb:
+  app:
+    image: myweb
     build: .
     ports:
       - "3000:3000"
     container_name: myweb-container
     restart: always
-    environment:
-      - NODE_ENV=production
+    command: npm start
+    

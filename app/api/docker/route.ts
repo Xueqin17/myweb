@@ -1,49 +1,57 @@
-import { NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { writeFileSync } from 'fs';
-import path from 'path';
+import { NextResponse } from "next/server";
+import { exec } from "child_process";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 // Accept POST request
 export async function POST(req: Request) {
   try {
-    const { imageName } = await req.json(); 
+    const { imageName } = await req.json();
     const projectRoot = process.cwd();
+    const now = new Date().toISOString();
 
-    // Create Dockerfile
+    // Initialzie log
+    let logOutput = ` Docker Automation Started at ${now}\n`;
+    logOutput += `Image name: ${imageName}\n\n`;
+
+    // Generate Dockerfile content
     const dockerfileContent = `
-# Use Node.js 22 Alpine version
+# Auto-generated Dockerfile
 FROM node:22-alpine
-
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-
 COPY . .
+RUN npm install
 RUN npm run build
-
 EXPOSE 3000
 CMD ["npm", "start"]
-    `.trim();
-    writeFileSync(path.join(projectRoot, 'Dockerfile'), dockerfileContent);
+    `;
 
-    // Create docker-compose.yml
+    // Generate docker-compose.yml content
     const composeContent = `
 version: '3'
 services:
-  ${imageName || 'myweb'}:
+  app:
+    image: ${imageName}
     build: .
     ports:
-      - "3000:3000"
-    container_name: ${imageName || 'myweb'}-container
+      - "3001:3000"
+    container_name: ${imageName}-container
     restart: always
-    environment:
-      - NODE_ENV=production
-    `.trim();
-    writeFileSync(path.join(projectRoot, 'docker-compose.yml'), composeContent);
+    command: npm start
+    `;
 
-    // Implement Docker build
-    const dockerCommand = `docker build -t ${imageName || 'myweb'} .`;
+    logOutput += "Generating Docker configuration files...\n";
 
+    // Write files
+    await writeFile(path.join(projectRoot, "Dockerfile"), dockerfileContent);
+    await writeFile(path.join(projectRoot, "docker-compose.yml"), composeContent);
+
+    logOutput += "Dockerfile & docker-compose.yml created successfully.\n\n";
+
+    // Build Docker image
+    logOutput += " Starting Docker build...\n";
+
+    const dockerCommand = `docker build -t ${imageName} .`;
     const dockerOutput = await new Promise((resolve, reject) => {
       exec(dockerCommand, { cwd: projectRoot }, (error, stdout, stderr) => {
         if (error) reject(stderr || stdout);
@@ -51,14 +59,17 @@ services:
       });
     });
 
-    // Automating commit to GitHub
-    const now = new Date().toISOString();
+    logOutput += " Docker build complete.\n\n";
+
+    // Auto commit to GitHub
+    logOutput += "Committing Docker configs to GitHub...\n";
+
     const gitCommands = `
       git add Dockerfile docker-compose.yml &&
-      git commit -m "Auto generated Docker config for ${imageName} at ${now}" &&
-      echo "No changes to commit" &&
+      (git commit -m "Auto update Docker configs for ${imageName} at ${now}" || echo "No Docker changes to commit") &&
       git push origin main
     `;
+
     const gitOutput = await new Promise((resolve, reject) => {
       exec(gitCommands, { cwd: projectRoot }, (error, stdout, stderr) => {
         if (error) reject(stderr || stdout);
@@ -66,18 +77,31 @@ services:
       });
     });
 
-    // Return log
+    logOutput += " GitHub push complete.\n\n";
+
+    // log output
+    const fullOutput = `
+${logOutput}
+--- Docker Build Log ---
+${dockerOutput}
+
+--- Git Log ---
+${gitOutput}
+`;
+
+    // Return fronted display
     return NextResponse.json({
       success: true,
-      message: `Dockerfile, compose & build complete for image: ${imageName}`,
-      logs: `${dockerOutput}\n\n--- GIT LOG ---\n${gitOutput}`,
+      message: "Docker automation completed successfully.",
+      logs: fullOutput,
     });
+
   } catch (error: any) {
-    console.error("Docker automation failed:", error);
+    
     return NextResponse.json({
       success: false,
-      message: 'Error during Docker automation',
-      error: error?.stdeer || error?.message || String(error),
+      message: "Error during Docker automation.",
+      error: error.toString(),
     });
   }
 }

@@ -56,7 +56,6 @@ services:
     const gitCommands = `
       git add Dockerfile docker-compose.yml &&
       git commit -m "Auto generated Docker config for ${imageName} at ${now}" &&
-      echo "No Docker changes to commit" &&
       git push origin main
     `;
     const gitOutput = await new Promise((resolve, reject) => {

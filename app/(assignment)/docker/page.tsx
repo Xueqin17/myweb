@@ -58,7 +58,7 @@ export default function DockerPage() {
         </button>
       </div>
 
-      <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto whitespace-pre-wrap h-[500px]">
+      <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto whitespace-pre-wrap h-[300px]">
         {logs || 'No output yet. Click Execute to start.'}
       </pre>
     </div>

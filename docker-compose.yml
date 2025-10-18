@@ -1,10 +1,10 @@
 version: '3'
 services:
-  myapp:
+  myweb:
     build: .
     ports:
       - "3000:3000"
-    container_name: myapp-container
+    container_name: myweb-container
     restart: always
     environment:
       - NODE_ENV=production

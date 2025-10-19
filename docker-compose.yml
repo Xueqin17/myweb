@@ -1,12 +1,18 @@
 
-version: '3'
 services:
   app:
     image: myweb
     build: .
     ports:
-      - "3001:3000"
+      - "4080:3000"
     container_name: myweb-container
     restart: always
-    command: npm start
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - NODE_ENV=production
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma migrate dev --name init_user_table &&
+             npm run build &&
+             npm run start"
     

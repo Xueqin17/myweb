@@ -17,27 +17,46 @@ export async function POST(req: Request) {
     // Generate Dockerfile content
     const dockerfileContent = `
 # Auto-generated Dockerfile
-FROM node:22-alpine
+
+FROM node:18-alpine AS builder
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
+FROM node:18-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+
 EXPOSE 3000
+
+ENV NODE_ENV=production
+
 CMD ["npm", "start"]
     `;
 
     // Generate docker-compose.yml content
     const composeContent = `
-version: '3'
 services:
   app:
-    image: ${imageName}
+    image: myweb
     build: .
     ports:
-      - "3001:3000"
-    container_name: ${imageName}-container
+      - "4080:3000"
+    container_name: myweb-container
     restart: always
-    command: npm start
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - NODE_ENV=production
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma migrate dev --name init_user_table &&
+             npm run build &&
+             npm run start"
     `;
 
     logOutput += "Generating Docker configuration files...\n";

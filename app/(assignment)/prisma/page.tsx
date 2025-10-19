@@ -220,7 +220,7 @@ export default function PrismaPage() {
         </tbody>
       </table>
 
-      {/* Commit button */}
+      Commit button
       <button
         onClick={() => alert('Auto commit to GitHub feature here')}
         style={{

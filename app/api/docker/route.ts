@@ -46,7 +46,7 @@ services:
     image: myweb
     build: .
     ports:
-      - "4080:3000"
+      - "80:3000"
     container_name: myweb-container
     restart: always
     environment:

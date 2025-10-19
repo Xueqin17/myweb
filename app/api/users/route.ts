@@ -1,95 +1,99 @@
-// @ts-nocheck
-import { NextResponse } from 'next/server';
+// app/api/users/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import sequelize from '../../../database.js';
-import User from '../../../models/user.js';
 
 const prisma = new PrismaClient();
+// CORS headers (keep it simple for demo)
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const orm = searchParams.get('orm') || 'prisma';
+// Preflight
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
 
+// GET: list all users
+export async function GET() {
   try {
-    if (orm === 'prisma') {
-      const users = await prisma.user.findMany();
-      return NextResponse.json(users);
-    } else {
-      await sequelize.sync();
-      const users = await User.findAll();
-      return NextResponse.json(users);
-    }
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const users = await prisma.user.findMany();
+    return NextResponse.json(users, { headers: corsHeaders });
+  } catch (err) {
+    console.error('GET /api/users error:', err);
+    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500, headers: corsHeaders });
   }
 }
 
-export async function POST(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const orm = searchParams.get('orm') || 'prisma';
-  const { name } = await req.json();
-
+// POST: create user { name }
+export async function POST(request: NextRequest) {
   try {
-    if (orm === 'prisma') {
-      await prisma.user.create({ data: { name } });
-    } else {
-      await sequelize.sync();
-      await User.create({ name });
+    const body = await request.json().catch(() => ({}));
+    if (!body?.name || typeof body.name !== 'string') {
+      return NextResponse.json({ error: 'Field "name" is required' }, { status: 400, headers: corsHeaders });
     }
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    const created = await prisma.user.create({
+      data: { name: body.name, lineStatus: 'offline' },
+    });
+
+    return NextResponse.json(created, { headers: corsHeaders });
+  } catch (err) {
+    console.error('POST /api/users error:', err);
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500, headers: corsHeaders });
   }
 }
 
-export async function PUT(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const orm = searchParams.get('orm') || 'prisma';
-  const { id } = await req.json();
-
+// PATCH: toggle/update user by id (query), body { lineStatus }
+export async function PATCH(request: NextRequest) {
   try {
-    if (orm === 'prisma') {
-      const user = await prisma.user.findUnique({ where: { id: Number(id) } });
-      if (!user) throw new Error('User not found');
-      const newStatus = user.lineStatus === 'online' ? 'offline' : 'online';
-      await prisma.user.update({
-        where: { id: Number(id) },
-        data: { lineStatus: newStatus },
-      });
-    } else {
-      await sequelize.sync();
-      const user = await User.findByPk(id);
-      if (!user) throw new Error('User not found');
-      const newStatus = user.lineStatus === 'online' ? 'offline' : 'online';
-      await user.update({ lineStatus: newStatus });
+    const { searchParams } = new URL(request.url);
+    const idParam = searchParams.get('id');
+    if (!idParam) {
+      return NextResponse.json({ error: 'Missing query param "id"' }, { status: 400, headers: corsHeaders });
     }
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    const id = Number(idParam);
+    if (Number.isNaN(id)) {
+      return NextResponse.json({ error: '"id" must be a number' }, { status: 400, headers: corsHeaders });
+    }
+
+    const body = await request.json().catch(() => ({}));
+    if (!body?.lineStatus || !['online', 'offline'].includes(body.lineStatus)) {
+      return NextResponse.json({ error: '"lineStatus" must be "online" or "offline"' }, { status: 400, headers: corsHeaders });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id },
+      data: { lineStatus: body.lineStatus },
+    });
+
+    return NextResponse.json(updated, { headers: corsHeaders });
+  } catch (err) {
+    console.error('PATCH /api/users error:', err);
+    return NextResponse.json({ error: 'Toggle failed' }, { status: 500, headers: corsHeaders });
   }
 }
 
-export async function DELETE(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const orm = searchParams.get('orm') || 'prisma';
-  const idParam = searchParams.get('id'); // From URL to get User ID
-  const id = idParam ? Number(idParam) : null;
-
-  if (!id) {
-    return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
-  }
-
+// DELETE: delete user by id (query)
+export async function DELETE(request: NextRequest) {
   try {
-    if (orm === 'prisma') {
-      await prisma.user.delete({ where: { id } });
-    } else {
-      await sequelize.sync();
-      await User.destroy({ where: { id } });
+    const { searchParams } = new URL(request.url);
+    const idParam = searchParams.get('id');
+    if (!idParam) {
+      return NextResponse.json({ error: 'Missing query param "id"' }, { status: 400, headers: corsHeaders });
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('Delete error:', error);
-    return NextResponse.json({ error: 'Delete failed: ' + error.message }, { status: 500 });
+    const id = Number(idParam);
+    if (Number.isNaN(id)) {
+      return NextResponse.json({ error: '"id" must be a number' }, { status: 400, headers: corsHeaders });
+    }
+
+    await prisma.user.delete({ where: { id } });
+    return NextResponse.json({ message: 'User deleted successfully' }, { headers: corsHeaders });
+  } catch (err) {
+    console.error('DELETE /api/users error:', err);
+    return NextResponse.json({ error: 'Delete failed' }, { status: 500, headers: corsHeaders });
   }
 }

@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 
+ const APIURL = "ec2-18-212-36-156.compute-1.amazonaws.com:4080";
+
 export default function PrismaPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [newUser, setNewUser] = useState('');
@@ -10,7 +12,7 @@ export default function PrismaPage() {
   // Fetch users from backend
   const fetchUsers = async () => {
     try {
-      const res = await fetch(`/api/users?orm=${orm}`);
+      const res = await fetch(`${APIURL}/api/users?orm=${orm}`);
       const data = await res.json();
       setUsers(data);
       setError('');
@@ -28,7 +30,7 @@ export default function PrismaPage() {
   const addUser = async () => {
     if (!newUser) return;
     try {
-      const res = await fetch(`/api/users?orm=${orm}`, {
+      const res = await fetch(`${APIURL}/api/users?orm=${orm}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newUser }),
@@ -48,7 +50,7 @@ export default function PrismaPage() {
   // Toggle user online/offline status
   const toggleStatus = async (id: number) => {
     try {
-      const res = await fetch(`/api/users?orm=${orm}`, {
+      const res = await fetch(`${APIURL}/api/users?orm=${orm}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
@@ -70,7 +72,7 @@ export default function PrismaPage() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/users?orm=${orm}&id=${id}`, {
+      const res = await fetch(`${APIURL}/api/users?orm=${orm}&id=${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {

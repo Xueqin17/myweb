@@ -18,7 +18,6 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 
-
 ENV NODE_ENV=production
 ENV DATABASE_URL="file:./prisma/dev.db"
 

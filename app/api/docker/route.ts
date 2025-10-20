@@ -22,8 +22,11 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+RUN npm install sqlite3 --build-from-source
 COPY . .
+RUN npx prisma generate
 RUN npm run build
+
 FROM node:18-alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/package*.json ./
@@ -32,31 +35,35 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 
+ENV NODE_ENV=production
+ENV DATABASE_URL="file:./prisma/dev.db"
+
 EXPOSE 3000
 
-ENV NODE_ENV=production
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
     `;
 
     // Generate docker-compose.yml content
     const composeContent = `
 services:
-  app:
-    image: myweb
+  frontend:
     build: .
+    container_name: myweb_frontend
     ports:
       - "80:3000"
-    container_name: myweb-container
-    restart: always
     environment:
-      - DATABASE_URL=file:./dev.db
       - NODE_ENV=production
-    command: >
-      sh -c "npx prisma generate &&
-             npx prisma migrate dev --name init_user_table &&
-             npm run build &&
-             npm run start"
+    command: sh -c "npm run start"
+
+  api:
+    build: .
+    container_name: myweb_api
+    ports:
+      - "4080:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:./prisma/dev.db
+    command: sh -c " npm run start"
     `;
 
     logOutput += "Generating Docker configuration files...\n";

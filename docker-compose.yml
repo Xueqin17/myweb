@@ -16,6 +16,5 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=file:./prisma/dev.db
-    # In prod-like mode we "build/start", not "dev"
     command: sh -c " npm run start"
    

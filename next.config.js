@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['sqlite3', 'sequelize'],
+    serverExternalPackages: ['sqlite3', 'sequelize'],
   },
   webpack: (config) => {
     config.externals.push({

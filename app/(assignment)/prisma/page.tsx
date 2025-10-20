@@ -1,13 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
 
- const APIURL = "ec2-18-212-36-156.compute-1.amazonaws.com:4080";
+ const APIURL =
+  typeof window !== "undefined" && window.location.hostname ==="localhost"
+  ? "http://localhost:4080"
+  : "http://ec2-3-83-165-118.compute-1.amazonaws.com:4080";
 
 export default function PrismaPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [newUser, setNewUser] = useState('');
   const [error, setError] = useState('');
-  const [orm, setOrm] = useState('prisma');
+  const [orm, setOrm] = useState<'prisma' | 'sequelize'>('prisma');
 
   // Fetch users from backend
   const fetchUsers = async () => {
@@ -221,22 +224,6 @@ export default function PrismaPage() {
           )}
         </tbody>
       </table>
-
-      {/* Commit button
-      <button
-        onClick={() => alert('Auto commit to GitHub feature here')}
-        style={{
-          marginTop: '20px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          padding: '10px 20px',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
-        Commit to GitHub
-      </button> */}
     </div>
   );
 }

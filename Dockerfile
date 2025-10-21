@@ -24,3 +24,4 @@ ENV DATABASE_URL="file:./prisma/dev.db"
 EXPOSE 3000
 
 CMD ["npm", "run", "start"]
+    

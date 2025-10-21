@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
  const APIURL =
   typeof window !== "undefined" && window.location.hostname ==="localhost"
   ? "http://localhost:4080"
-  : "http://ec2-107-22-76-16.compute-1.amazonaws.com:4080";
+  : "http://ec2-3-92-209-21.compute-1.amazonaws.com:4080";
 
 export default function PrismaPage() {
   const [users, setUsers] = useState<any[]>([]);

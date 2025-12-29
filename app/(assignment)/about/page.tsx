@@ -8,7 +8,7 @@ export default function AboutPage() {
 
       
        <video controls width="90%" style={{ marginTop: '20px', borderRadius: '8px' }}>
-        <source src="/my_part2.mp4" type="video/mp4" />
+        <source src="/" type="video/mp4" />
        
       </video>
       
